@@ -50,7 +50,6 @@ class snake(object):
         self.dirny = 1
 
     def move(self):
-        print(self.dirnx, self.dirny)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -147,15 +146,15 @@ class Game:
             pygame.draw.line(surface, (255, 255, 255), (0, y), (w, y))
 
     def redrawWindow(self, surface):
-        global rows, width, s, snack
+        global rows, width, s, snacks
         surface.fill((0, 0, 0))
         s.draw(surface)
-        snack.draw(surface)
+        for snack in snacks:
+             snack.draw(surface)
         self.drawGrid(width, rows, surface)
         pygame.display.update()
 
     def randomSnack(self, rows, item):
-
         positions = item.body
 
         while True:
@@ -193,26 +192,35 @@ class Game:
             return 0, 0
 
     def run(self):
-        global width, rows, s, snack
+        global width, rows, s, snacks
         width = 500
         rows = 20
         win = pygame.display.set_mode((width, width))
         s = snake((255, 0, 0), (13, 10))
-        snack = cube(self.randomSnack(rows, s), color=(0, 255, 0))
+        snacks = []
+        snacks.append(cube(self.randomSnack(rows, s), color=(0, 255, 0)))
         flag = True
+        points = 0
 
         clock = pygame.time.Clock()
 
         while flag:
             pygame.time.delay(50)
             clock.tick(10)
-            
-            s.dirnx, s.dirny = self.parse_data(self.send_data(s.dirnx, s.dirny))
+
+            s.dirnx, s.dirny = self.parse_data(
+                self.send_data(s.dirnx, s.dirny))
             s.move()
 
-            if s.body[0].pos == snack.pos:
-                s.addCube()
-                snack = cube(self.randomSnack(rows, s), color=(0, 255, 0))
+            for snack in snacks:
+                if s.body[0].pos == snack.pos:
+                    s.addCube()
+                    points += 1
+                    snacks.remove(snack)
+                    snacks.append(
+                        cube(self.randomSnack(rows, s), color=(0, 255, 0)))
+
+            self.send_data(s.dirnx, s.dirny)
 
             for x in range(len(s.body)):
                 if s.body[x].pos in list(map(lambda z: z.pos, s.body[x+1:])):

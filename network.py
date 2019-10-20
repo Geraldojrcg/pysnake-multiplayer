@@ -3,14 +3,14 @@ import socket
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.host = "localhost"
+        self.host = "192.168.0.26"
         self.port = 8080
         self.addr = (self.host, self.port)
         self.id = self.connect()
 
     def connect(self):
         self.client.connect(self.addr)
-        return self.client.recv(2048).decode()
+        return self.client.connect(self.addr)
 
     def send(self, data):
         try:
