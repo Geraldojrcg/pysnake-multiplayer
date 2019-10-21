@@ -9,7 +9,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 players = []
 
 server = '10.7.129.25'
-port = 3002
+port = 3000
 server_ip = socket.gethostbyname(server)
 
 try:
@@ -24,9 +24,9 @@ print("Waiting for a connection")
 def threaded_client(conn, addr):
     global players
     reply = ''
-    
-    conn.send(str.encode("connected"))
-    
+    snake_color = (255,0,0)
+    snake_pos = (13,10)
+    conn.send(str.encode(str(snake_color)+";"+str(snake_pos)))
     while True:
         try:
             data = conn.recv(2048)
