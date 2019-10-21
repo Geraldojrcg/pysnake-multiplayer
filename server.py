@@ -9,7 +9,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 players = []
 
 server = '10.7.129.25'
-port = 3000
+port = 3001
 server_ip = socket.gethostbyname(server)
 
 try:
@@ -30,7 +30,7 @@ def threaded_client(conn, addr):
     while True:
         try:
             data = conn.recv(2048)
-
+            print(data)
             reply = data.decode('utf-8')
             player = Player(addr[0], reply.split(":")[1].split(",")[0], reply.split(":")[1].split(",")[1], reply.split(":")[2], None)
             

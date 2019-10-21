@@ -4,7 +4,7 @@ class Player(object):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.score = score
-        self.snake 
+        self.snake = None
 
     def __repr__(self):
         return str(self.__dict__)

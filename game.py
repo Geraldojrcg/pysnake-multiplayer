@@ -75,7 +75,7 @@ class Game:
             snake_color, snake_pos = snake_received_data.split(";",1)
             r,g,b = snake_color.replace("(","").replace(")","").split(",",2)
             x,y = snake_pos.replace("(","").replace(")","").split(",",1)
-            print(r,g,b,x,y)
+
             player_snake = snake((int(r),int(g),int(b)),(int(x),int(y)))
             s = player_snake
             width = 500
