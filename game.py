@@ -73,7 +73,11 @@ class Game:
         while True:
             data = self.net.receive()
             print(data)
-            player_received = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            data = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            for player in data:
+                print(player)
+                
+            """ player_received = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
             player = Player(player_received.ip, player_received.score, player_received.snake)
             snake_reaceived = player.snake
             s = Snake(snake_reaceived.color, (snake_reaceived.head.pos[0], snake_reaceived.head.pos[1]), snake_reaceived.dirnx, snake_reaceived.dirny)
@@ -115,5 +119,5 @@ class Game:
                         s.reset((10, 10))
                         break
 
-                self.redrawWindow(win)
+                self.redrawWindow(win) """
         pass
