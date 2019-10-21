@@ -1,29 +1,15 @@
 import socket
 from _thread import *
 import sys
-
-
-class Player(object):
-    def __init__(self, ip, pos_x, pos_y, score):
-        self.ip = ip
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.score = score
-
-    def __repr__(self):
-        return str(self.__dict__)
-
-    def __str__(self):
-        return str(self.__dict__)
-
+from player import Player
+from snake import snake
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 players = []
 
-server = 'localhost'
-port = 8080
-
+server = '10.7.129.25'
+port = 3002
 server_ip = socket.gethostbyname(server)
 
 try:
@@ -35,25 +21,20 @@ except socket.error as e:
 s.listen(10)
 print("Waiting for a connection")
 
-currentId = "0"
-pos = ["0:50,50", "1:100,100"]
-
-
 def threaded_client(conn, addr):
-    global currentId, pos, players
-    conn.send(str.encode(currentId))
-    currentId = "1"
+    global players
     reply = ''
+    
+    conn.send(str.encode("connected"))
+    
     while True:
         try:
             data = conn.recv(2048)
+
             reply = data.decode('utf-8')
-            player = Player(addr[0], reply.split(":")[1].split(",")[0], reply.split(":")[1].split(",")[1], reply.split(":")[2])
-            flag = False
-            for player in players:
-                if player.ip == addr[0]:
-                    flag = True
-            if not flag:
+            player = Player(addr[0], reply.split(":")[1].split(",")[0], reply.split(":")[1].split(",")[1], reply.split(":")[2], None)
+            
+            if not any(x.ip == addr[0] for x in players):
                 players.append(player)
         
             if not data:
