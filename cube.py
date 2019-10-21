@@ -1,6 +1,7 @@
 import pygame
+import json
 
-class cube(object):
+class Cube(object):
     rows = 20
     w = 500
 
@@ -28,3 +29,6 @@ class cube(object):
             circleMiddle2 = (i*dis + dis - radius*2, j*dis+8)
             pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
             pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+    
+    def json(self):
+        return json.dumps(self.__dict__)

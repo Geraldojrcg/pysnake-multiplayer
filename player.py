@@ -1,13 +1,16 @@
+import json
+
 class Player(object):
-    def __init__(self, ip, pos_x, pos_y, score, snake):
+    def __init__(self, ip, score, snake):
         self.ip = ip
-        self.pos_x = pos_x
-        self.pos_y = pos_y
         self.score = score
-        self.snake = None
+        self.snake = snake
 
     def __repr__(self):
         return str(self.__dict__)
 
     def __str__(self):
         return str(self.__dict__)
+
+    def json(self):
+        return json.dumps(self, default=lambda x: x.__dict__)

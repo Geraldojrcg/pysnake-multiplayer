@@ -1,18 +1,19 @@
 import pygame
-from cube import cube
+from cube import Cube
+import json
 
-class snake(object):
-    body = []
+class Snake(object):
     turns = {}
+    body = []
 
-    def __init__(self, color, pos):
+    def __init__(self, color, pos, dirnx, dirny):
         self.color = color
-        self.head = cube(pos)
+        self.head = Cube(pos)
         self.body.append(self.head)
-        self.body.append(cube((pos[0] - 1, pos[1])))
-        self.body.append(cube((pos[0] - 2, pos[1])))
-        self.dirnx = 0
-        self.dirny = 1
+        self.body.append(Cube((pos[0] - 1, pos[1])))
+        self.body.append(Cube((pos[0] - 2, pos[1])))
+        self.dirnx = dirnx
+        self.dirny = dirny
 
     def move(self):
         for event in pygame.event.get():
@@ -62,11 +63,11 @@ class snake(object):
                     c.move(c.dirnx, c.dirny)
 
     def reset(self, pos):
-        self.head = cube(pos)
+        self.head = Cube(pos)
         self.body = []
         self.body.append(self.head)
-        self.body.append(cube((pos[0] - 1, pos[1])))
-        self.body.append(cube((pos[0] - 2, pos[1])))
+        self.body.append(Cube((pos[0] - 1, pos[1])))
+        self.body.append(Cube((pos[0] - 2, pos[1])))
         self.turns = {}
         self.dirnx = 0
         self.dirny = 1
@@ -76,13 +77,13 @@ class snake(object):
         dx, dy = tail.dirnx, tail.dirny
 
         if dx == 1 and dy == 0:
-            self.body.append(cube((tail.pos[0]-1, tail.pos[1])))
+            self.body.append(Cube((tail.pos[0]-1, tail.pos[1])))
         elif dx == -1 and dy == 0:
-            self.body.append(cube((tail.pos[0]+1, tail.pos[1])))
+            self.body.append(Cube((tail.pos[0]+1, tail.pos[1])))
         elif dx == 0 and dy == 1:
-            self.body.append(cube((tail.pos[0], tail.pos[1]-1)))
+            self.body.append(Cube((tail.pos[0], tail.pos[1]-1)))
         elif dx == 0 and dy == -1:
-            self.body.append(cube((tail.pos[0], tail.pos[1]+1)))
+            self.body.append(Cube((tail.pos[0], tail.pos[1]+1)))
 
         self.body[-1].dirnx = dx
         self.body[-1].dirny = dy
@@ -93,3 +94,6 @@ class snake(object):
                 c.draw(surface, True)
             else:
                 c.draw(surface)
+
+    def json(self):
+        return json.dumps(self, default=lambda x: x.__dict__)
