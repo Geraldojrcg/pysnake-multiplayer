@@ -72,6 +72,7 @@ class Game:
         global width, rows, s, snacks
         while True:
             data = self.net.receive()
+            print(data)
             player_received = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
             player = Player(player_received.ip, player_received.score, player_received.snake)
             snake_reaceived = player.snake

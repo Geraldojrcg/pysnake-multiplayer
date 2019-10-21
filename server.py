@@ -11,7 +11,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 players = []
 
 server = '10.7.129.25'
-port = 3009
+port = 3010
 server_ip = socket.gethostbyname(server)
 
 try:
@@ -44,13 +44,10 @@ def threaded_client(conn, addr):
             conn.send(str.encode("bye"))
             break
         else:
-            print(data)
             player_receive = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-            print(player_receive)
             player.score = player_receive.score
             player.snake = player_receive.snake
 
-        print(players)
         conn.sendall(str.encode(str([p.json() for p in players])))
     
     print("Connection Closed")
