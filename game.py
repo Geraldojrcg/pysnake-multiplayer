@@ -177,9 +177,9 @@ class Game:
         except:
             pass
 
-    def send_data(self, pos_x, pos_y):
+    def send_data(self, pos_x, pos_y, score):
         data = str(self.net.id) + ":" + str(pos_x) + \
-            "," + str(pos_y)
+            "," + str(pos_y) + ":" + str(score)
         reply = self.net.send(data)
         return reply
 
@@ -200,7 +200,7 @@ class Game:
         snacks = []
         snacks.append(cube(self.randomSnack(rows, s), color=(0, 255, 0)))
         flag = True
-        points = 0
+        score = 0
 
         clock = pygame.time.Clock()
 
@@ -209,23 +209,24 @@ class Game:
             clock.tick(10)
 
             s.dirnx, s.dirny = self.parse_data(
-                self.send_data(s.dirnx, s.dirny))
+                self.send_data(s.dirnx, s.dirny, score))
             s.move()
 
             for snack in snacks:
                 if s.body[0].pos == snack.pos:
                     s.addCube()
-                    points += 1
+                    score += 1
                     snacks.remove(snack)
                     snacks.append(
                         cube(self.randomSnack(rows, s), color=(0, 255, 0)))
 
-            self.send_data(s.dirnx, s.dirny)
+            self.send_data(s.dirnx, s.dirny, score)
 
             for x in range(len(s.body)):
                 if s.body[x].pos in list(map(lambda z: z.pos, s.body[x+1:])):
                     print('Score: ', len(s.body) - 2)
                     self.message_box('You Lost!', 'Play again...')
+                    score = 0
                     s.reset((10, 10))
                     break
 

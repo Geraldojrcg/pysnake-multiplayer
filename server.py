@@ -21,7 +21,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 players = []
 
-server = '192.168.0.26'
+server = 'localhost'
 port = 8080
 
 server_ip = socket.gethostbyname(server)
@@ -40,7 +40,7 @@ pos = ["0:50,50", "1:100,100"]
 
 
 def threaded_client(conn, addr):
-    global currentId, pos
+    global currentId, pos, players
     conn.send(str.encode(currentId))
     currentId = "1"
     reply = ''
@@ -48,22 +48,24 @@ def threaded_client(conn, addr):
         try:
             data = conn.recv(2048)
             reply = data.decode('utf-8')
-            player = Player(addr[0], reply.split(":")[1].split(",")[0], reply.split(":")[1].split(",")[1], 0)
+            player = Player(addr[0], reply.split(":")[1].split(",")[0], reply.split(":")[1].split(",")[1], reply.split(":")[2])
             flag = False
             for player in players:
                 if player.ip == addr[0]:
                     flag = True
             if not flag:
                 players.append(player)
-            
-            print(players)
+        
             if not data:
                 players.remove(player)
                 conn.send(str.encode("bye"))
                 break
             else:
-                print("Recieved: " + reply)
-                print("Sending: " + reply)
+                player.score = reply.split(":")[2]
+                player.pos_x = reply.split(":")[1].split(",")[0]
+                player.pos_y = reply.split(":")[1].split(",")[1]
+
+            print(players)
 
             conn.sendall(str.encode(reply))
         except:
