@@ -10,8 +10,8 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 players = []
 
-server = '10.7.104.14'
-port = 3010
+server = 'localhost'
+port = 3000
 server_ip = socket.gethostbyname(server)
 
 try:
@@ -32,18 +32,12 @@ def threaded_client(conn, addr):
 
         snake = Snake(snake_color, snake_pos, 0, 1)
         player = Player(addr[0], 0, snake)
-
+        print(player)
         if not any(x.ip == addr[0] for x in players):
             players.append(player)
 
-        for p in players:
-            p.snake = p.snake.json()
-            p = p.json()
 
-        print(str(players))
-        conn.send(str.encode(str(players)))
-
-        #conn.send(str.encode(player.json()))
+        conn.send(str.encode(player.json()))
 
         data = conn.recv(2048)
     
